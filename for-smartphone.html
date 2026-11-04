@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ミュージックタイピング - Classic Electric Piano (Rec & Metronome)</title>
+    <title>モバイルピアノ - Classic Electric Piano</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -102,59 +102,53 @@
             animation: pulse-rec 1s infinite;
         }
 
-        /* スクロールバーのカスタマイズ */
+        /* スクロールバーのカスタマイズ (モバイル向けにスリム化) */
         ::-webkit-scrollbar {
-            height: 8px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: #cbd5e1;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #64748b;
             border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+        
+        /* 鍵盤エリアの横スクロールをスムーズに */
+        .keyboard-scroll-container {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
         }
     </style>
 </head>
-<body class="bg-zinc-900 text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4">
+<body class="bg-zinc-900 text-slate-100 min-h-screen flex items-center justify-center sm:p-4">
 
-    <!-- Mac GarageBand Window Container -->
-    <div class="w-full max-w-6xl bg-[#dcdce1] rounded-2xl shadow-2xl overflow-hidden border border-slate-400 text-slate-800 flex flex-col">
+    <!-- Mac GarageBand Window Container (モバイル最適化) -->
+    <div class="w-full h-[100dvh] sm:h-auto sm:max-w-4xl bg-[#dcdce1] sm:rounded-2xl shadow-2xl overflow-hidden border-0 sm:border border-slate-400 text-slate-800 flex flex-col">
         
         <!-- Header Bar -->
-        <div class="bg-gradient-to-b from-[#ececee] to-[#d4d4d8] px-4 py-2.5 flex items-center justify-between border-b border-slate-300">
-            <div class="flex items-center space-x-2 w-24">
-                <div class="w-3 h-3 rounded-full bg-red-500 border border-red-600 shadow-inner"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500 border border-yellow-600 shadow-inner"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500 border border-green-600 shadow-inner"></div>
+        <div class="bg-gradient-to-b from-[#ececee] to-[#d4d4d8] px-3 py-2 flex items-center justify-between border-b border-slate-300">
+            <div class="flex items-center space-x-2 w-16 sm:w-24">
+                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 border border-red-600 shadow-inner"></div>
+                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500 border border-yellow-600 shadow-inner"></div>
+                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500 border border-green-600 shadow-inner"></div>
             </div>
             
-            <div class="flex items-center space-x-2 font-medium text-sm text-slate-700">
-                <svg class="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 00-3 3v2a3 3 0 003 3h3.763l7.79 3.894A1 1 0 0018 17V3z"/>
-                </svg>
-                <span>ミュージックタイピング - Classic Electric Piano Pro</span>
+            <div class="flex items-center space-x-1 font-medium text-xs sm:text-sm text-slate-700 truncate">
+                <span>Mobile Piano Pro</span>
             </div>
 
-            <div class="w-32 text-right">
-                <span id="audio-status" class="inline-block px-2 py-0.5 text-xs rounded bg-emerald-100 text-emerald-800 font-semibold border border-emerald-300">
+            <div class="w-16 sm:w-32 text-right">
+                <span id="audio-status" class="inline-block px-1.5 py-0.5 text-[10px] sm:text-xs rounded bg-emerald-100 text-emerald-800 font-semibold border border-emerald-300">
                     READY
                 </span>
             </div>
         </div>
 
         <!-- Top 88-Key Mini Preview Bar -->
-        <div class="bg-[#2a2a2e] p-3 border-b border-slate-400 flex flex-col items-center">
-            <div class="text-xs text-slate-400 mb-1 flex items-center justify-between w-full max-w-5xl px-1">
-                <span>A0 (21)</span>
-                <span class="text-slate-300 font-medium">全88鍵盤ナビゲーション（青枠：現在表示・演奏中の全鍵盤領域）</span>
-                <span>C8 (108)</span>
-            </div>
-            
-            <div class="relative w-full max-w-5xl h-7 bg-slate-900 rounded overflow-hidden shadow-inner border border-slate-700 select-none">
+        <div class="bg-[#2a2a2e] p-2 border-b border-slate-400 flex flex-col items-center">
+            <div class="relative w-full max-w-3xl h-5 sm:h-7 bg-slate-900 rounded overflow-hidden shadow-inner border border-slate-700 select-none">
                 <div id="mini-map-keys" class="w-full h-full flex relative">
                     <!-- JavaScriptで88鍵を自動生成 -->
                 </div>
@@ -162,171 +156,125 @@
             </div>
         </div>
 
-        <!-- Master Control Panel (Octave, Transpose, Volume, Metronome, Recording) -->
-        <div class="bg-[#e3e3e8] p-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-300">
+        <!-- Master Control Panel (モバイル向けに折り返し設定) -->
+        <div class="bg-[#e3e3e8] p-2 sm:p-4 flex flex-wrap justify-center items-center gap-2 border-b border-slate-300 overflow-y-auto max-h-48 sm:max-h-none">
             
             <!-- Group 1: Pitch & Tone Shift Controls -->
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap justify-center items-center gap-2">
                 <!-- Octave Control -->
-                <div class="flex items-center space-x-2 bg-slate-200/80 p-2 rounded-xl border border-slate-300">
+                <div class="flex items-center space-x-2 bg-slate-200/80 px-2 py-1.5 rounded-xl border border-slate-300">
                     <div class="text-right">
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">オクターブ</div>
-                        <div id="octave-display" class="text-base font-bold text-slate-800 font-mono">C3</div>
+                        <div class="text-[9px] sm:text-[10px] text-slate-500 font-semibold uppercase tracking-wider">オクターブ</div>
+                        <div id="octave-display" class="text-sm sm:text-base font-bold text-slate-800 font-mono">C3</div>
                     </div>
                     <div class="flex space-x-1">
-                        <button id="btn-oct-down" class="gb-btn-orange text-white font-bold w-8 h-8 rounded-lg flex flex-col items-center justify-center text-xs transition active:scale-95">
-                            <span class="text-[9px] opacity-80">⇧Z</span>
-                            <span class="text-xs leading-none">-</span>
+                        <button id="btn-oct-down" class="gb-btn-orange text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-sm transition active:scale-95">
+                            -
                         </button>
-                        <button id="btn-oct-up" class="gb-btn-orange text-white font-bold w-8 h-8 rounded-lg flex flex-col items-center justify-center text-xs transition active:scale-95">
-                            <span class="text-[9px] opacity-80">⇧X</span>
-                            <span class="text-xs leading-none">+</span>
+                        <button id="btn-oct-up" class="gb-btn-orange text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-sm transition active:scale-95">
+                            +
                         </button>
                     </div>
                 </div>
 
                 <!-- Transpose Control -->
-                <div class="flex items-center space-x-2 bg-slate-200/80 p-2 rounded-xl border border-slate-300">
+                <div class="flex items-center space-x-2 bg-slate-200/80 px-2 py-1.5 rounded-xl border border-slate-300">
                     <div class="text-right">
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">トランスポーズ</div>
-                        <div id="transpose-display" class="text-base font-bold text-slate-800 font-mono">0 半音</div>
+                        <div class="text-[9px] sm:text-[10px] text-slate-500 font-semibold uppercase tracking-wider">トランスポーズ</div>
+                        <div id="transpose-display" class="text-sm sm:text-base font-bold text-slate-800 font-mono">0 半音</div>
                     </div>
                     <div class="flex space-x-1">
-                        <button id="btn-trans-down" class="gb-btn-darkorange text-white font-bold w-8 h-8 rounded-lg flex flex-col items-center justify-center text-xs transition active:scale-95">
-                            <span class="text-[9px] opacity-80">⇧C</span>
-                            <span class="text-xs leading-none">-</span>
+                        <button id="btn-trans-down" class="gb-btn-darkorange text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-sm transition active:scale-95">
+                            -
                         </button>
-                        <button id="btn-trans-up" class="gb-btn-darkorange text-white font-bold w-8 h-8 rounded-lg flex flex-col items-center justify-center text-xs transition active:scale-95">
-                            <span class="text-[9px] opacity-80">⇧V</span>
-                            <span class="text-xs leading-none">+</span>
+                        <button id="btn-trans-up" class="gb-btn-darkorange text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-sm transition active:scale-95">
+                            +
                         </button>
-                    </div>
-                </div>
-
-                <!-- Volume Control -->
-                <div class="flex items-center space-x-3 bg-slate-200/80 px-3 py-2 rounded-xl border border-slate-300">
-                    <div>
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">キーボード音量</div>
-                        <div class="flex items-center space-x-2">
-                            <input id="volume-slider" type="range" min="0" max="100" value="80" class="w-20 accent-sky-600 cursor-pointer h-1.5 bg-slate-300 rounded-lg">
-                            <span id="volume-display" class="text-xs font-bold font-mono text-slate-700 w-8">80%</span>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Group 2: Metronome & Recording & Export -->
-            <div class="flex flex-wrap items-center gap-3">
-                
+            <!-- Group 2: Metronome & Recording -->
+            <div class="flex flex-wrap justify-center items-center gap-2">
                 <!-- Metronome Control -->
-                <div class="flex items-center space-x-3 bg-slate-200/80 p-2 rounded-xl border border-slate-300">
-                    <div class="flex items-center space-x-1.5">
-                        <button id="btn-metro-toggle" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-slate-400 transition flex items-center space-x-1">
-                            <span id="metro-led" class="w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
-                            <span>メトロノーム</span>
-                        </button>
-                    </div>
+                <div class="flex items-center space-x-2 bg-slate-200/80 px-2 py-1.5 rounded-xl border border-slate-300">
+                    <button id="btn-metro-toggle" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold px-2 py-1.5 rounded-lg text-[10px] sm:text-xs border border-slate-400 transition flex items-center space-x-1">
+                        <span id="metro-led" class="w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
+                        <span>メトロ</span>
+                    </button>
                     <div class="flex flex-col">
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">BPM</div>
+                        <div class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider">BPM</div>
                         <div class="flex items-center space-x-1">
-                            <input id="bpm-input" type="number" min="40" max="240" value="120" class="w-12 px-1 py-0.5 text-center text-xs font-bold font-mono bg-white border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-sky-500">
-                            <input id="bpm-slider" type="range" min="40" max="240" value="120" class="w-16 accent-sky-600 cursor-pointer h-1.5 bg-slate-300 rounded-lg">
+                            <input id="bpm-input" type="number" min="40" max="240" value="120" class="w-10 px-1 py-0.5 text-center text-xs font-bold font-mono bg-white border border-slate-300 rounded focus:outline-none">
                         </div>
                     </div>
                 </div>
 
-                <!-- Record & Export Panel -->
-                <div class="flex items-center space-x-2 bg-slate-200/80 p-2 rounded-xl border border-slate-300">
-                    <button id="btn-record" class="gb-btn-red text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center space-x-1.5 shadow active:scale-95">
-                        <span id="rec-dot" class="w-2.5 h-2.5 rounded-full bg-white inline-block"></span>
+                <!-- Record Panel -->
+                <div class="flex items-center space-x-2 bg-slate-200/80 px-2 py-1.5 rounded-xl border border-slate-300">
+                    <button id="btn-record" class="gb-btn-red text-white font-bold px-3 py-1.5 rounded-lg text-[10px] sm:text-xs transition flex items-center space-x-1 shadow active:scale-95">
+                        <span id="rec-dot" class="w-2 h-2 rounded-full bg-white inline-block"></span>
                         <span id="rec-text">録音</span>
                     </button>
-                    <div id="rec-timer" class="text-xs font-mono font-bold text-slate-700 bg-white px-2 py-1 rounded border border-slate-300 min-w-[48px] text-center">
+                    <div id="rec-timer" class="text-xs font-mono font-bold text-slate-700 bg-white px-2 py-1 rounded border border-slate-300 min-w-[40px] text-center">
                         00:00
                     </div>
-
-                    <!-- MIDI Export Buttons -->
-                    <button id="btn-download-midi" disabled class="bg-slate-300 text-slate-400 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-slate-300 transition flex items-center space-x-1 cursor-not-allowed">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                        <span>MIDI保存</span>
-                    </button>
-
-                    <button id="btn-copy-midi" disabled class="bg-slate-300 text-slate-400 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-slate-300 transition flex items-center space-x-1 cursor-not-allowed">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-                        </svg>
-                        <span>データコピー</span>
-                    </button>
                 </div>
 
+                <!-- Export (MIDI) -->
+                <div class="flex items-center bg-slate-200/80 px-2 py-1.5 rounded-xl border border-slate-300">
+                    <button id="btn-download-midi" disabled class="bg-slate-300 text-slate-400 font-bold px-2 py-1.5 rounded-lg text-[10px] sm:text-xs border border-slate-300 transition flex items-center space-x-1 cursor-not-allowed">
+                        <span>MIDI保存</span>
+                    </button>
+                </div>
             </div>
 
         </div>
 
-        <!-- Main Interactive Piano Keyboard Container (3 Octaves: 37 Keys with Full Keyboard Mapping) -->
-        <div class="p-4 sm:p-6 bg-[#d4d4d9] overflow-x-auto flex justify-center">
-            <div id="piano-keyboard" class="relative flex h-52 sm:h-60 select-none min-w-[920px] pb-2 pt-1">
-                <!-- JSで全37鍵盤（PCタイピング対応）を自動挿入 -->
+        <!-- Main Interactive Piano Keyboard Container (横スクロール可能) -->
+        <div class="flex-1 bg-[#d4d4d9] overflow-x-auto keyboard-scroll-container pb-4 pt-2 px-2 flex">
+            <!-- 鍵盤上でのスワイプで画面スクロールができるように少し余白を設ける -->
+            <div class="flex-1 min-h-[160px] sm:min-h-[220px] flex items-center justify-start relative">
+                <div id="piano-keyboard" class="relative flex h-40 sm:h-52 select-none" style="min-width: max-content;">
+                    <!-- JSで全37鍵盤を自動挿入 -->
+                </div>
             </div>
         </div>
 
         <!-- Toast / Notification Bar -->
-        <div id="toast-message" class="hidden bg-sky-800 text-white text-xs font-semibold px-4 py-2 text-center transition-all">
+        <div id="toast-message" class="hidden bg-sky-800 text-white text-[10px] sm:text-xs font-semibold px-4 py-1.5 text-center transition-all absolute bottom-12 left-1/2 transform -translate-x-1/2 rounded-full shadow-lg z-50 whitespace-nowrap">
             メッセージ
         </div>
 
-        <!-- Footer / Instructions -->
-        <div class="bg-[#ececee] px-4 py-2.5 border-t border-slate-300 text-xs text-slate-600 flex flex-wrap justify-between items-center gap-2">
-            <div>
-                💡 <span class="font-semibold text-slate-700">操作方法:</span> 画面上の全鍵盤キーキャップに対応するPCキーボードを押して演奏可能。Shift+[Z]/[X]でオクターブ、Shift+[C]/[V]でトランスポーズ、Shift+[R]で録音。
-            </div>
-            <div class="text-slate-500 font-mono text-[11px]">
-                Standard MIDI File (Format 0) Export Engine
-            </div>
+        <!-- Footer / Instructions (モバイル向け) -->
+        <div class="bg-[#ececee] px-3 py-2 border-t border-slate-300 text-[10px] sm:text-xs text-slate-600 flex justify-center text-center">
+            💡 <span class="font-semibold text-slate-700 ml-1">操作方法:</span> 画面の鍵盤をタッチして演奏できます。各種ボタンでオクターブ変更や録音が可能です。
         </div>
 
     </div>
 
     <script>
         /* 
-         * GarageBand Style Pro Electric Piano & MIDI Recorder Script
+         * Mobile Optimized Pro Electric Piano & MIDI Recorder Script
          * Features:
-         * - Complete PC Keyboard mapping for ALL on-screen piano keys (C3 ~ C6)
+         * - Touch-optimized keyboard layout with horizontal scrolling
          * - Low-latency FM Electric Piano Synthesizer Engine
-         * - Real-time Master Volume Control
          * - Metronome with customizable BPM & audio-visual sync
          * - High-precision MIDI Performance Recording
-         * - Direct .mid file download & MIDI Data Copy for GarageBand import
+         * - Direct .mid file download
          */
 
         const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-        // C3 (MIDI 48) から C6 (MIDI 84) までの全37鍵盤の個別キーボードマッピング
-        // すべて重複なし・Z/X/C/Vコントロールキーと衝突なしのキー配置
-        const KEYS_MAP = {
-            48: 'Q', 49: '2', 50: 'W', 51: '3', 52: 'E',  53: 'R', 54: '5', 55: 'T', 56: '6', 57: 'Y', 58: '7', 59: 'U', 
-            60: 'I', 61: '9', 62: 'O', 63: '0', 64: 'P',  65: 'Z', 66: 'S', 67: 'X', 68: 'D', 69: 'C', 70: 'F', 71: 'V', 
-            72: 'B', 73: 'H', 74: 'N', 75: 'J', 76: 'M',  77: ',', 78: 'L', 79: '.', 80: ';', 81: '/', 82: ':', 83: '_', 84: ']'
-        };
-
+        // C3 (MIDI 48) から C6 (MIDI 84) までの全37鍵盤の構成データのみ作成
         const PIANO_KEYS_CONFIG = [];
         for (let midi = 48; midi <= 84; midi++) {
             const noteIndex = midi % 12;
             const isBlack = [1, 3, 6, 8, 10].includes(noteIndex);
             PIANO_KEYS_CONFIG.push({
                 midi: midi,
-                keyLabel: KEYS_MAP[midi] || '',
                 isBlack: isBlack
             });
-        }
-
-        // PCキーボード入力 -> 基準MIDIノート 逆引き辞書
-        const KEY_TO_NOTE_MAP = {};
-        for (let midi in KEYS_MAP) {
-            const k = KEYS_MAP[midi].toLowerCase();
-            if (k) KEY_TO_NOTE_MAP[k] = parseInt(midi);
         }
 
         // アプリケーション状態変数
@@ -335,7 +283,6 @@
         let masterVolume = 0.8; // 0.0 〜 1.0
 
         const activeVoices = new Map(); // 発音中のノート管理
-        const activePressedKeys = new Set(); // 重複keydown防止
 
         // Web Audio Context & Master Node
         let audioCtx = null;
@@ -378,7 +325,7 @@
             }
 
             document.getElementById('audio-status').innerText = 'AUDIO ACTIVE';
-            document.getElementById('audio-status').className = 'inline-block px-2 py-0.5 text-xs rounded bg-sky-100 text-sky-800 font-semibold border border-sky-300';
+            document.getElementById('audio-status').className = 'inline-block px-1.5 py-0.5 text-[10px] sm:text-xs rounded bg-sky-100 text-sky-800 font-semibold border border-sky-300';
         }
 
         /**
@@ -399,19 +346,16 @@
             const freq = 440 * Math.pow(2, (finalMidi - 69) / 12);
             const now = audioCtx.currentTime;
 
-            // 1. Voice Gain Node
             const voiceGain = audioCtx.createGain();
             voiceGain.gain.setValueAtTime(0.0001, now);
             voiceGain.gain.exponentialRampToValueAtTime(0.4, now + 0.002); 
             voiceGain.gain.exponentialRampToValueAtTime(0.15, now + 1.2);
 
-            // 2. Timbre Lowpass Filter
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(Math.min(freq * 4, 8000), now);
             filter.frequency.exponentialRampToValueAtTime(Math.max(freq * 1.5, 400), now + 0.3);
 
-            // 3. Oscillators
             const osc1 = audioCtx.createOscillator();
             osc1.type = 'sine';
             osc1.frequency.setValueAtTime(freq, now);
@@ -431,7 +375,6 @@
             tineGain.gain.setValueAtTime(0.2, now);
             tineGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
 
-            // Audio Routing
             osc1.connect(voiceGain);
             osc2.connect(osc2Gain);
             osc2Gain.connect(voiceGain);
@@ -452,15 +395,9 @@
                 startTime: now
             });
 
-            // 録音処理
             if (isRecording) {
                 const relTime = now - recordingStartTime;
-                recordedEvents.push({
-                    type: 'noteOn',
-                    note: finalMidi,
-                    velocity: 100,
-                    time: relTime
-                });
+                recordedEvents.push({ type: 'noteOn', note: finalMidi, velocity: 100, time: relTime });
             }
         }
 
@@ -476,15 +413,9 @@
             voice.voiceGain.gain.setValueAtTime(Math.max(voice.voiceGain.gain.value, 0.0001), now);
             voice.voiceGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
 
-            // 録音処理
             if (isRecording) {
                 const relTime = now - recordingStartTime;
-                recordedEvents.push({
-                    type: 'noteOff',
-                    note: voice.finalMidi,
-                    velocity: 0,
-                    time: relTime
-                });
+                recordedEvents.push({ type: 'noteOff', note: voice.finalMidi, velocity: 0, time: relTime });
             }
 
             setTimeout(() => {
@@ -508,7 +439,7 @@
                 scheduleBeat(currentBeat, nextBeatTime);
                 const secondsPerBeat = 60.0 / metronomeBpm;
                 nextBeatTime += secondsPerBeat;
-                currentBeat = (currentBeat + 1) % 4; // 4/4拍子
+                currentBeat = (currentBeat + 1) % 4;
             }
             if (metronomeOn) {
                 metronomeTimerID = setTimeout(scheduler, 25);
@@ -518,14 +449,11 @@
         function scheduleBeat(beat, time) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.type = 'sine';
             if (beat === 0) {
-                // 1拍目のアクセント音（高音）
                 osc.frequency.setValueAtTime(1200, time);
                 gain.gain.setValueAtTime(0.3, time);
             } else {
-                // 2〜4拍目（低音）
                 osc.frequency.setValueAtTime(800, time);
                 gain.gain.setValueAtTime(0.15, time);
             }
@@ -537,7 +465,6 @@
             osc.start(time);
             osc.stop(time + 0.04);
 
-            // 視覚LED点滅同期
             const delayMs = Math.max(0, (time - audioCtx.currentTime) * 1000);
             setTimeout(() => {
                 flashMetronomeLED(beat === 0);
@@ -564,33 +491,28 @@
             const led = document.getElementById('metro-led');
 
             if (metronomeOn) {
-                btn.className = 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-emerald-400 transition flex items-center space-x-1';
+                btn.className = 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-2 py-1.5 rounded-lg text-[10px] sm:text-xs border border-emerald-400 transition flex items-center space-x-1';
                 led.className = 'w-2 h-2 rounded-full bg-emerald-500 inline-block';
                 currentBeat = 0;
                 nextBeatTime = audioCtx.currentTime + 0.05;
                 scheduler();
             } else {
-                btn.className = 'bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-slate-400 transition flex items-center space-x-1';
+                btn.className = 'bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold px-2 py-1.5 rounded-lg text-[10px] sm:text-xs border border-slate-400 transition flex items-center space-x-1';
                 led.className = 'w-2 h-2 rounded-full bg-slate-500 inline-block';
                 if (metronomeTimerID) clearTimeout(metronomeTimerID);
             }
         }
 
-        /**
-         * Recording Controls
-         */
         function toggleRecording() {
             initAudio();
             if (!isRecording) {
-                // 録音開始
                 isRecording = true;
                 recordedEvents = [];
                 recordingStartTime = audioCtx.currentTime;
 
                 document.getElementById('rec-text').innerText = '停止';
-                document.getElementById('rec-dot').className = 'w-2.5 h-2.5 rounded-full bg-white rec-active inline-block';
+                document.getElementById('rec-dot').className = 'w-2 h-2 rounded-full bg-white rec-active inline-block';
                 
-                // タイマー開始
                 let seconds = 0;
                 document.getElementById('rec-timer').innerText = '00:00';
                 recTimerIntervalID = setInterval(() => {
@@ -602,20 +524,16 @@
 
                 showToast('録音を開始しました。鍵盤を演奏してください。');
             } else {
-                // 録音停止
                 isRecording = false;
                 clearInterval(recTimerIntervalID);
 
                 document.getElementById('rec-text').innerText = '録音';
-                document.getElementById('rec-dot').className = 'w-2.5 h-2.5 rounded-full bg-white inline-block';
+                document.getElementById('rec-dot').className = 'w-2 h-2 rounded-full bg-white inline-block';
 
                 const noteOnCount = recordedEvents.filter(e => e.type === 'noteOn').length;
                 if (noteOnCount > 0) {
                     document.getElementById('btn-download-midi').disabled = false;
-                    document.getElementById('btn-download-midi').className = 'gb-btn-emerald text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition flex items-center space-x-1 shadow active:scale-95 cursor-pointer';
-
-                    document.getElementById('btn-copy-midi').disabled = false;
-                    document.getElementById('btn-copy-midi').className = 'bg-slate-700 hover:bg-slate-800 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs border border-slate-600 transition flex items-center space-x-1 shadow active:scale-95 cursor-pointer';
+                    document.getElementById('btn-download-midi').className = 'gb-btn-emerald text-white font-bold px-2 py-1.5 rounded-lg text-[10px] sm:text-xs transition flex items-center space-x-1 shadow active:scale-95 cursor-pointer';
 
                     showToast(`録音完了: ${noteOnCount} ノート記録されました。MIDI保存可能！`);
                 } else {
@@ -624,25 +542,17 @@
             }
         }
 
-        /**
-         * Pure JavaScript Standard MIDI File (SMF Format 0) Exporter
-         * GarageBand等に直接ドラッグ＆ドロップで取り込める .mid バイナリを生成
-         */
         function buildMidiBinary(events, bpm) {
-            const ppq = 480; // 480 ticks per quarter note
+            const ppq = 480; 
             const ticksPerSecond = (bpm / 60.0) * ppq;
             
             const sorted = [...events].sort((a, b) => a.time - b.time);
             let trackBytes = [];
 
-            // Tempo Event: FF 51 03 [microseconds per quarter note]
             const mpqn = Math.round(60000000 / bpm);
             trackBytes.push(0x00, 0xFF, 0x51, 0x03, (mpqn >> 16) & 0xFF, (mpqn >> 8) & 0xFF, mpqn & 0xFF);
-
-            // Time Signature Event: 4/4
             trackBytes.push(0x00, 0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08);
 
-            // Variable Length Quantity (VLQ) Encoder
             function encodeVLQ(val) {
                 let res = [];
                 let v = Math.round(val);
@@ -670,22 +580,19 @@
                 }
             });
 
-            // End of Track Event
             trackBytes.push(0x00, 0xFF, 0x2F, 0x00);
 
-            // Header Chunk (MThd)
             const header = [
-                0x4D, 0x54, 0x68, 0x64, // "MThd"
-                0x00, 0x00, 0x00, 0x06, // Chunk size 6
-                0x00, 0x00,             // Format 0
-                0x00, 0x01,             // 1 track
+                0x4D, 0x54, 0x68, 0x64, 
+                0x00, 0x00, 0x00, 0x06, 
+                0x00, 0x00,             
+                0x00, 0x01,             
                 (ppq >> 8) & 0xFF, ppq & 0xFF
             ];
 
-            // Track Chunk (MTrk)
             const trackLen = trackBytes.length;
             const trackHeader = [
-                0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+                0x4D, 0x54, 0x72, 0x6B, 
                 (trackLen >> 24) & 0xFF,
                 (trackLen >> 16) & 0xFF,
                 (trackLen >> 8) & 0xFF,
@@ -695,7 +602,6 @@
             return new Uint8Array([...header, ...trackHeader, ...trackBytes]);
         }
 
-        // MIDIファイル（.mid）ダウンロード実行
         function downloadMidiFile() {
             if (recordedEvents.length === 0) return;
             const midiData = buildMidiBinary(recordedEvents, metronomeBpm);
@@ -704,36 +610,15 @@
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = `piano_recording_bpm${metronomeBpm}.mid`;
+            a.download = `mobile_piano_bpm${metronomeBpm}.mid`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            showToast('MIDIファイルをダウンロードしました！GarageBandにそのままドラッグ＆ドロップ可能です。');
+            showToast('MIDIファイルをダウンロードしました！');
         }
 
-        // MIDIデータのクリップボードコピー（Base64 / Data URL形式）
-        function copyMidiData() {
-            if (recordedEvents.length === 0) return;
-            const midiData = buildMidiBinary(recordedEvents, metronomeBpm);
-            
-            // Binary -> Base64
-            let binaryStr = '';
-            for (let i = 0; i < midiData.length; i++) {
-                binaryStr += String.fromCharCode(midiData[i]);
-            }
-            const b64 = btoa(binaryStr);
-            const dataUrl = `data:audio/midi;base64,${b64}`;
-
-            navigator.clipboard.writeText(dataUrl).then(() => {
-                showToast('MIDI Base64 Data URL をクリップボードにコピーしました！');
-            }).catch(() => {
-                showToast('クリップボードのコピーに失敗しました。');
-            });
-        }
-
-        // 88鍵ミニナビゲーション描画
         function render88KeyMiniMap() {
             const container = document.getElementById('mini-map-keys');
             container.innerHTML = '';
@@ -775,14 +660,13 @@
             }
         }
 
-        // メイン37鍵盤エリアの描画（全キーキャップ付き）
         function renderMainKeyboard() {
             const keyboardContainer = document.getElementById('piano-keyboard');
             keyboardContainer.innerHTML = '';
 
-            const whiteKeyWidthPx = 48;
-            const whiteKeyMarginPx = 2;
-            const blackKeyWidthPx = 30;
+            const whiteKeyWidthPx = 40; // スマホ向けに少し細く
+            const whiteKeyMarginPx = 1;
+            const blackKeyWidthPx = 26;
             const stepWidth = whiteKeyWidthPx + whiteKeyMarginPx;
 
             let currentWhiteIndex = 0;
@@ -792,37 +676,32 @@
                 const octaveNum = Math.floor(kConfig.midi / 12) - 1;
 
                 if (!kConfig.isBlack) {
-                    // 白鍵
                     const keyEl = document.createElement('div');
                     keyEl.id = `key-${kConfig.midi}`;
-                    keyEl.className = 'white-key relative flex flex-col justify-end items-center pb-2.5 text-slate-600 font-bold text-xs select-none cursor-pointer shrink-0';
+                    keyEl.className = 'white-key relative flex flex-col justify-end items-center pb-2 text-slate-500 font-bold text-[10px] select-none cursor-pointer shrink-0';
                     keyEl.style.width = `${whiteKeyWidthPx}px`;
                     keyEl.style.height = '100%';
                     keyEl.style.marginRight = `${whiteKeyMarginPx}px`;
                     keyEl.dataset.midi = kConfig.midi;
 
-                    keyEl.innerHTML = `
-                        <div class="text-[9px] text-slate-400 font-normal mb-1">${noteName}${octaveNum}</div>
-                        ${kConfig.keyLabel ? `<div class="w-7 h-7 rounded-md bg-slate-200/90 border border-slate-300 flex items-center justify-center text-slate-800 font-mono shadow-sm text-xs font-bold">${kConfig.keyLabel}</div>` : ''}
-                    `;
+                    keyEl.innerHTML = `<span>${noteName}${octaveNum}</span>`;
 
-                    keyEl.addEventListener('mousedown', (e) => {
-                        e.preventDefault();
-                        triggerNoteOn(kConfig.midi, `mouse-${kConfig.midi}`);
-                    });
-                    keyEl.addEventListener('mouseup', () => triggerNoteOff(`mouse-${kConfig.midi}`));
-                    keyEl.addEventListener('mouseleave', () => triggerNoteOff(`mouse-${kConfig.midi}`));
-                    keyEl.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        triggerNoteOn(kConfig.midi, `touch-${kConfig.midi}`);
-                    }, { passive: false });
-                    keyEl.addEventListener('touchend', () => triggerNoteOff(`touch-${kConfig.midi}`));
+                    // タッチイベント & マウスイベント
+                    const startEv = (e) => { e.preventDefault(); triggerNoteOn(kConfig.midi, `input-${kConfig.midi}`); };
+                    const endEv = (e) => { e.preventDefault(); triggerNoteOff(`input-${kConfig.midi}`); };
+                    
+                    keyEl.addEventListener('touchstart', startEv, { passive: false });
+                    keyEl.addEventListener('touchend', endEv);
+                    keyEl.addEventListener('touchcancel', endEv);
+                    
+                    keyEl.addEventListener('mousedown', startEv);
+                    keyEl.addEventListener('mouseup', endEv);
+                    keyEl.addEventListener('mouseleave', endEv);
 
                     keyboardContainer.appendChild(keyEl);
                     currentWhiteIndex++;
 
                 } else {
-                    // 黒鍵
                     const leftWhiteIndex = currentWhiteIndex - 1;
                     const blackEl = document.createElement('div');
                     blackEl.id = `key-${kConfig.midi}`;
@@ -832,26 +711,19 @@
                     
                     blackEl.style.left = `${leftPos}px`;
                     blackEl.style.width = `${blackKeyWidthPx}px`;
-                    blackEl.style.height = '62%';
+                    blackEl.style.height = '60%';
                     blackEl.dataset.midi = kConfig.midi;
 
-                    blackEl.innerHTML = `
-                        ${kConfig.keyLabel ? `<div class="w-6 h-6 rounded bg-slate-800 border border-slate-600 flex items-center justify-center text-slate-200 font-mono text-[11px] font-bold shadow">${kConfig.keyLabel}</div>` : ''}
-                    `;
+                    const startEv = (e) => { e.preventDefault(); e.stopPropagation(); triggerNoteOn(kConfig.midi, `input-${kConfig.midi}`); };
+                    const endEv = (e) => { e.preventDefault(); e.stopPropagation(); triggerNoteOff(`input-${kConfig.midi}`); };
 
-                    blackEl.addEventListener('mousedown', (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        triggerNoteOn(kConfig.midi, `mouse-${kConfig.midi}`);
-                    });
-                    blackEl.addEventListener('mouseup', () => triggerNoteOff(`mouse-${kConfig.midi}`));
-                    blackEl.addEventListener('mouseleave', () => triggerNoteOff(`mouse-${kConfig.midi}`));
-                    blackEl.addEventListener('touchstart', (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        triggerNoteOn(kConfig.midi, `touch-${kConfig.midi}`);
-                    }, { passive: false });
-                    blackEl.addEventListener('touchend', () => triggerNoteOff(`touch-${kConfig.midi}`));
+                    blackEl.addEventListener('touchstart', startEv, { passive: false });
+                    blackEl.addEventListener('touchend', endEv);
+                    blackEl.addEventListener('touchcancel', endEv);
+                    
+                    blackEl.addEventListener('mousedown', startEv);
+                    blackEl.addEventListener('mouseup', endEv);
+                    blackEl.addEventListener('mouseleave', endEv);
 
                     keyboardContainer.appendChild(blackEl);
                 }
@@ -866,7 +738,7 @@
 
         function triggerNoteOff(keyId) {
             playNoteOff(keyId);
-            const activeMidi = keyId.replace(/^(mouse-|touch-|kbd-)/, '');
+            const activeMidi = keyId.replace(/^input-/, '');
             const keyEl = document.getElementById(`key-${activeMidi}`);
             if (keyEl) keyEl.classList.remove('active');
         }
@@ -887,99 +759,23 @@
             }, 3000);
         }
 
-        // イベントリスナー設定
-        window.addEventListener('keydown', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-            if (e.repeat) return;
-
-            const lowerKey = e.key.toLowerCase();
-
-            if (e.shiftKey) {
-                // オクターブ変更 Shift + [Z] / [X]
-                if (lowerKey === 'z') {
-                    octaveK = Math.max(-4, octaveK - 1);
-                    updateDisplay();
-                    return;
-                }
-                if (lowerKey === 'x') {
-                    octaveK = Math.min(4, octaveK + 1);
-                    updateDisplay();
-                    return;
-                }
-
-                // トランスポーズ変更 Shift + [C] / [V]
-                if (lowerKey === 'c') {
-                    transposeN = Math.max(-12, transposeN - 1);
-                    updateDisplay();
-                    return;
-                }
-                if (lowerKey === 'v') {
-                    transposeN = Math.min(12, transposeN + 1);
-                    updateDisplay();
-                    return;
-                }
-
-                // 録音開始 Shift + [R]
-                if (lowerKey === 'r') {
-                    e.preventDefault();
-                    toggleRecording();
-                    return;
-                }
-            }
-
-            // 鍵盤演奏
-            if (KEY_TO_NOTE_MAP.hasOwnProperty(lowerKey)) {
-                const midiNote = KEY_TO_NOTE_MAP[lowerKey];
-                const keyId = `kbd-${midiNote}`;
-                activePressedKeys.add(e.code);
-                triggerNoteOn(midiNote, keyId);
-            }
-        });
-
-        window.addEventListener('keyup', (e) => {
-            const lowerKey = e.key.toLowerCase();
-
-            if (KEY_TO_NOTE_MAP.hasOwnProperty(lowerKey)) {
-                const midiNote = KEY_TO_NOTE_MAP[lowerKey];
-                const keyId = `kbd-${midiNote}`;
-                activePressedKeys.delete(e.code);
-                triggerNoteOff(keyId);
-            }
-        });
-
         // UI コントロール操作イベント
         document.getElementById('btn-oct-down').addEventListener('click', () => { octaveK = Math.max(-4, octaveK - 1); updateDisplay(); });
         document.getElementById('btn-oct-up').addEventListener('click', () => { octaveK = Math.min(4, octaveK + 1); updateDisplay(); });
         document.getElementById('btn-trans-down').addEventListener('click', () => { transposeN = Math.max(-12, transposeN - 1); updateDisplay(); });
         document.getElementById('btn-trans-up').addEventListener('click', () => { transposeN = Math.min(12, transposeN + 1); updateDisplay(); });
 
-        // 音量スライダー
-        const volSlider = document.getElementById('volume-slider');
-        volSlider.addEventListener('input', (e) => {
-            const val = parseInt(e.target.value);
-            masterVolume = val / 100.0;
-            document.getElementById('volume-display').innerText = `${val}%`;
-            if (masterGain && audioCtx) {
-                masterGain.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
-            }
-        });
-
         // BPM調整
         const bpmInput = document.getElementById('bpm-input');
-        const bpmSlider = document.getElementById('bpm-slider');
         function setBpm(val) {
             metronomeBpm = Math.max(40, Math.min(240, val));
             bpmInput.value = metronomeBpm;
-            bpmSlider.value = metronomeBpm;
         }
         bpmInput.addEventListener('change', (e) => setBpm(parseInt(e.target.value) || 120));
-        bpmSlider.addEventListener('input', (e) => setBpm(parseInt(e.target.value) || 120));
 
-        // メトロノーム・録音・MIDIボタン
         document.getElementById('btn-metro-toggle').addEventListener('click', toggleMetronome);
         document.getElementById('btn-record').addEventListener('click', toggleRecording);
         document.getElementById('btn-download-midi').addEventListener('click', downloadMidiFile);
-        document.getElementById('btn-copy-midi').addEventListener('click', copyMidiData);
 
         // 初期化実行
         render88KeyMiniMap();
